@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
+    <title>OBS 透明动态覆盖层</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main id="stage" aria-label="透明动态覆盖层">
+      <div id="moving-object" aria-hidden="true">
+        <div id="text-object"></div>
+        <img id="image-object" alt="" draggable="false" />
+      </div>
+    </main>
+
+    <aside id="settings-panel" class="is-hidden" aria-label="覆盖层设置" aria-hidden="true">
+      <header class="panel-header">
+        <div>
+          <h1>覆盖层设置</h1>
+          <p>单击面板外关闭，移动不会暂停</p>
+        </div>
+        <button id="close-panel" class="icon-button" type="button" aria-label="关闭设置">×</button>
+      </header>
+
+      <div class="panel-content">
+        <fieldset>
+          <legend>对象模式</legend>
+          <div class="segmented-control">
+            <label>
+              <input type="radio" name="mode" value="text" />
+              <span>文本</span>
+            </label>
+            <label>
+              <input type="radio" name="mode" value="image" />
+              <span>图片 / GIF</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <section id="text-settings" class="settings-section">
+          <h2>文本</h2>
+
+          <label class="field">
+            <span>内容</span>
+            <textarea id="text-content" rows="3" spellcheck="false"></textarea>
+          </label>
+
+          <label class="field compact-field">
+            <span>字号</span>
+            <span class="number-with-unit">
+              <input id="font-size" type="number" min="8" max="400" step="1" inputmode="numeric" />
+              <span>px</span>
+            </span>
+          </label>
+
+          <div class="field">
+            <span>字体</span>
+            <div class="font-tools">
+              <select id="font-select" aria-label="字体选择"></select>
+              <button id="load-local-fonts" type="button">读取本机字体</button>
+            </div>
+          </div>
+
+          <label class="field">
+            <span>手动字体名称（兼容回退）</span>
+            <input id="font-name" type="text" autocomplete="off" spellcheck="false" placeholder="例如 Microsoft YaHei" />
+          </label>
+
+          <p id="font-status" class="status-message" role="status"></p>
+
+          <div class="toggle-grid" aria-label="文字样式">
+            <label><input id="font-bold" type="checkbox" /> 加粗</label>
+            <label><input id="font-italic" type="checkbox" /> 斜体</label>
+            <label><input id="font-underline" type="checkbox" /> 下划线</label>
+            <label><input id="font-strike" type="checkbox" /> 删除线</label>
+          </div>
+        </section>
+
+        <section id="image-settings" class="settings-section">
+          <h2>图片</h2>
+
+          <label class="file-picker">
+            <span>选择静态图片或 GIF</span>
+            <input id="image-file" type="file" accept="image/*,.gif" />
+          </label>
+
+          <div class="button-row">
+            <button id="clear-image" class="secondary-button" type="button">清除已保存图片</button>
+          </div>
+
+          <p id="image-status" class="status-message" role="status"></p>
+
+          <div class="range-setting">
+            <div class="range-heading">
+              <label for="image-scale-range">相对于原图尺寸</label>
+              <span class="number-with-unit">
+                <input id="image-scale-number" type="number" min="1" max="500" step="1" inputmode="decimal" />
+                <span>%</span>
+              </span>
+            </div>
+            <input id="image-scale-range" type="range" min="1" max="500" step="1" />
+          </div>
+        </section>
+
+        <section class="settings-section">
+          <h2>移动</h2>
+          <div class="range-setting">
+            <div class="range-heading">
+              <label for="speed-range">速度</label>
+              <span class="number-with-unit">
+                <input id="speed-number" type="number" min="1" max="1000" step="1" inputmode="decimal" />
+                <span>px/s</span>
+              </span>
+            </div>
+            <input id="speed-range" type="range" min="1" max="1000" step="1" />
+          </div>
+          <p id="fit-notice" class="status-message is-hidden" role="status">
+            对象大于当前视口，已临时等比缩小以保持完整可见。
+          </p>
+        </section>
+      </div>
+    </aside>
+
+    <noscript>此覆盖层需要启用 JavaScript。</noscript>
+    <script src="script.js" defer></script>
+  </body>
+</html>

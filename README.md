@@ -1,84 +1,28 @@
-# OBS 透明动态覆盖层
+# GitHub Pages 项目目录
 
-一个无框架、可直接部署到 GitHub Pages 的纯前端透明动态覆盖层。对象会按真实时间差匀速移动，在浏览器视口边缘反弹，适合用作 OBS Browser Source（浏览器源）。
+本仓库用于集中部署多个互相独立的静态网页项目。
 
-在线地址：<https://manjusaka818-stack.github.io/test/>
+项目入口：<https://manjusaka818-stack.github.io/test/>
 
-## 功能
-
-- 页面默认完全透明，无滚动条。
-- 文本模式和图片模式互斥，并记住上次模式。
-- 对象初始位置、移动方向随机，并避开接近纯水平或纯垂直的方向。
-- 速度由 `requestAnimationFrame` 的时间差和 `px/s` 计算，不依赖帧率。
-- 左右碰撞只反转水平速度，上下碰撞只反转垂直速度，撞角时两个方向同时反转。
-- 文本支持内容、字号、字体、加粗、斜体、下划线和删除线。
-- 可通过 Local Font Access API 读取本机字体；不支持或未授权时可以手动输入字体名称。
-- 图片使用真实 `<img>` 元素显示，支持浏览器可解码的静态图片与 GIF 动画。
-- 图片尺寸以原始像素尺寸为 `100%`，数字输入和滑块双向同步、实时生效。
-- 图片 Blob 保存在 IndexedDB；重新打开 OBS 后可恢复。普通设置保存在 localStorage。
-- 调整窗口或对象尺寸后会重新约束位置。对象大于视口时会临时等比缩小，保证完整可见；视口恢复后自动恢复设定尺寸。
-- 单击透明空白处打开半透明设置面板；单击面板外或按 `Esc` 关闭。面板显示时对象继续运动。
-
-## 项目文件
+## 目录约定
 
 ```text
-obs-transparent-overlay/
+/
 ├─ .github/workflows/deploy-pages.yml
 ├─ .nojekyll
 ├─ index.html
-├─ style.css
-├─ script.js
-└─ README.md
+└─ projects/
+   └─ obs-transparent-overlay/
+      ├─ index.html
+      ├─ style.css
+      ├─ script.js
+      └─ README.md
 ```
 
-项目没有构建步骤或第三方依赖。
+以后新增部署放在 `projects/<项目名>/` 下，并在根目录 `index.html` 中增加对应分类和入口。
 
-## 部署到 GitHub Pages
+## 已部署项目
 
-1. 新建一个 GitHub 仓库，把本目录中的文件上传到仓库根目录。
-2. 打开仓库的 **Settings → Pages**。
-3. 在 **Build and deployment → Source** 中选择 **GitHub Actions**。
-4. 推送到 `main` 分支后，项目内置的工作流会自动部署网站。
-5. 等待 GitHub 给出类似 `https://用户名.github.io/仓库名/` 的 HTTPS 地址。
+### 直播工具 / OBS
 
-也可以把本目录作为现有 Pages 站点的子目录部署，只要四个文件保持在同一目录即可。
-
-## 在 OBS 中使用
-
-1. 在来源面板中添加 **浏览器**。
-2. URL 填入 GitHub Pages 地址。
-3. 设置需要的宽度和高度，例如 `1920 × 1080`。
-4. 建议勾选 **场景变为活动状态时刷新浏览器** 之前先确认是否希望每次重新随机初始位置；页面刷新会重新随机位置与方向，但普通设置和图片仍会恢复。
-5. 在来源上单击右键，选择 **交互**。单击透明空白处即可打开设置面板。
-6. 设置完成后单击面板外关闭，避免面板出现在直播画面中。
-
-页面自身已经透明。如特定 OBS 配置出现底色，可以在浏览器源的自定义 CSS 中确认没有添加背景色，或使用：
-
-```css
-html, body { background: transparent !important; }
-```
-
-## 本机字体说明
-
-“读取本机字体”依赖 `window.queryLocalFonts()`：
-
-- 需要 HTTPS 安全环境（GitHub Pages 满足）并由用户主动授权。
-- OBS 内置 Chromium/CEF 的版本或权限策略可能不提供这个 API。
-- API 不可用、权限被拒绝或字体列表为空时，仍可在“手动字体名称”中填写已安装字体的 family 名称，例如 `Microsoft YaHei` 或 `霞鹜文楷`。
-- 手动名称是否生效取决于运行 OBS 的电脑是否安装了对应字体。
-
-## 数据保存与注意事项
-
-- 文本、样式、模式、速度和图片比例保存在该网页来源对应的 localStorage 中。
-- 图片文件保存在该网页来源对应的 IndexedDB 中，不会上传到服务器。
-- 同一个 Pages URL 会恢复自己的数据；更换域名、仓库路径或协议会被浏览器视为不同来源。
-- 清理 OBS 浏览器缓存、删除站点数据或重建浏览器配置后，已保存图片可能丢失。
-- 浏览器能否播放某种静态图片格式取决于其 Chromium 版本；GIF 使用原生 `<img>` 播放。
-- 为避免后台停顿恢复时瞬移，单帧时间差最多按 `0.1` 秒推进，正常帧率下速度仍严格按 `px/s` 计算。
-
-## 本地预览
-
-直接打开 `index.html` 可以测试大部分功能，但本机字体读取通常要求 HTTPS 或 localhost。建议在本目录启动任意静态文件服务器，再通过 `http://localhost:端口` 打开页面。
-
-首次进入时设置面板保持隐藏。单击没有被移动对象覆盖的透明区域即可打开。
-
+- [OBS 透明动态覆盖层](https://manjusaka818-stack.github.io/test/projects/obs-transparent-overlay/)
