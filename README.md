@@ -2,6 +2,8 @@
 
 一个无框架、可直接部署到 GitHub Pages 的纯前端透明动态覆盖层。对象会按真实时间差匀速移动，在浏览器视口边缘反弹，适合用作 OBS Browser Source（浏览器源）。
 
+在线地址：<https://manjusaka818-stack.github.io/test/>
+
 ## 功能
 
 - 页面默认完全透明，无滚动条。
@@ -21,6 +23,8 @@
 
 ```text
 obs-transparent-overlay/
+├─ .github/workflows/deploy-pages.yml
+├─ .nojekyll
 ├─ index.html
 ├─ style.css
 ├─ script.js
@@ -31,10 +35,10 @@ obs-transparent-overlay/
 
 ## 部署到 GitHub Pages
 
-1. 新建一个 GitHub 仓库，把本目录中的四个文件上传到仓库根目录。
+1. 新建一个 GitHub 仓库，把本目录中的文件上传到仓库根目录。
 2. 打开仓库的 **Settings → Pages**。
-3. 在 **Build and deployment** 中选择 **Deploy from a branch**。
-4. 选择包含这些文件的分支（通常为 `main`），目录选择 `/ (root)`，然后保存。
+3. 在 **Build and deployment → Source** 中选择 **GitHub Actions**。
+4. 推送到 `main` 分支后，项目内置的工作流会自动部署网站。
 5. 等待 GitHub 给出类似 `https://用户名.github.io/仓库名/` 的 HTTPS 地址。
 
 也可以把本目录作为现有 Pages 站点的子目录部署，只要四个文件保持在同一目录即可。
